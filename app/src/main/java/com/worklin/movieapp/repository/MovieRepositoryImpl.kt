@@ -1,5 +1,6 @@
 package com.worklin.movieapp.repository
 
+import com.worklin.movieapp.core.internetCheck
 import com.worklin.movieapp.data.local.LocalMovieDataSource
 import com.worklin.movieapp.data.model.MovieList
 import com.worklin.movieapp.data.model.toMovieEntity
@@ -11,26 +12,41 @@ class MovieRepositoryImpl(
 ) : MovieRepository {
 
     override suspend fun getUpcomingMovies(): MovieList {
-        dataSourceRemote.getUpCommingMovies().results.forEach { movie ->
-            dataSourceLocal.saveMovie(movie.toMovieEntity("upcoming"))
+        return if (internetCheck.isNetWorkAvailable()) {
+            dataSourceRemote.getUpCommingMovies().results.forEach { movie ->
+                dataSourceLocal.saveMovie(movie.toMovieEntity("upcoming"))
+            }
+            dataSourceLocal.getUpCommingMovies()
+        } else {
+            dataSourceLocal.getUpCommingMovies()
+
         }
 
-        return dataSourceLocal.getUpCommingMovies()
     }
 
     override suspend fun getToRatedMovies(): MovieList {
-        dataSourceRemote.getTopRatedMovies().results.forEach { movie ->
-            dataSourceLocal.saveMovie(movie.toMovieEntity("toprated"))
-        }
 
-        return dataSourceLocal.getTopRatedMovies()
+        return if (internetCheck.isNetWorkAvailable()) {
+            dataSourceRemote.getTopRatedMovies().results.forEach { movie ->
+                dataSourceLocal.saveMovie(movie.toMovieEntity("toprated"))
+            }
+            dataSourceLocal.getTopRatedMovies()
+        } else {
+            dataSourceLocal.getTopRatedMovies()
+        }
     }
 
     override suspend fun getPopularMovies(): MovieList {
-        dataSourceRemote.getPopularMovies().results.forEach { movie ->
-            dataSourceLocal.saveMovie(movie.toMovieEntity("popular"))
+
+        return if (internetCheck.isNetWorkAvailable()) {
+            dataSourceRemote.getPopularMovies().results.forEach { movie ->
+                dataSourceLocal.saveMovie(movie.toMovieEntity("popular"))
+            }
+            dataSourceLocal.getPopularMovies()
+        } else {
+            dataSourceLocal.getPopularMovies()
         }
 
-        return dataSourceLocal.getPopularMovies()
     }
+
 }
