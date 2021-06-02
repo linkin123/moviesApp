@@ -9,8 +9,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import com.worklin.movieapp.R
 import com.worklin.movieapp.core.Resource
+import com.worklin.movieapp.data.local.AppDatabase
+import com.worklin.movieapp.data.local.LocalMovieDataSource
 import com.worklin.movieapp.data.model.Movie
-import com.worklin.movieapp.data.remote.MovieDataSource
+import com.worklin.movieapp.data.remote.RemoteMovieDataSource
 import com.worklin.movieapp.databinding.FragmentMovieBinding
 import com.worklin.movieapp.presentation.MovieViewModel
 import com.worklin.movieapp.presentation.MovieViewModelFactory
@@ -26,7 +28,10 @@ class MovieFragment : Fragment(R.layout.fragment_movie) , MovieAdapter.OnMovieCl
 
     private lateinit var binding: FragmentMovieBinding
     private val viewmodel by viewModels<MovieViewModel> {
-        MovieViewModelFactory(MovieRepositoryImpl(MovieDataSource(RetrofitClient.webService)))
+        MovieViewModelFactory(MovieRepositoryImpl(
+            RemoteMovieDataSource(RetrofitClient.webService),
+            LocalMovieDataSource(AppDatabase.getDatabase(requireContext()).movieDao())
+        ))
     }
 
     private lateinit var concatAdapter: ConcatAdapter
@@ -46,7 +51,7 @@ class MovieFragment : Fragment(R.layout.fragment_movie) , MovieAdapter.OnMovieCl
                     binding.progressBar.visibility = View.GONE
                     concatAdapter.apply {
                         addAdapter(0, UpcomingConcatAdapter(MovieAdapter(result.data.first.results, this@MovieFragment)))
-                        addAdapter(1, UpcomingConcatAdapter(MovieAdapter(result.data.second.results, this@MovieFragment)))
+                        addAdapter(1, TopRatedConcatAdapter(MovieAdapter(result.data.second.results, this@MovieFragment)))
                         addAdapter(2, PopularConcatAdapter(MovieAdapter(result.data.third.results, this@MovieFragment)))
                     }
 

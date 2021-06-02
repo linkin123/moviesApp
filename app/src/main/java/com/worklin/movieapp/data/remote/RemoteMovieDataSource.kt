@@ -4,7 +4,7 @@ import com.worklin.movieapp.application.AppConstants
 import com.worklin.movieapp.data.model.MovieList
 import com.worklin.movieapp.repository.WebService
 
-class MovieDataSource(private val webservice: WebService) {
+class RemoteMovieDataSource(private val webservice: WebService) {
 
     suspend fun getUpCommingMovies() =
         webservice.getUpcomingMovies(AppConstants.API_KEY)
