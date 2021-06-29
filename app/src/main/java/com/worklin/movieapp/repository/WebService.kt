@@ -23,11 +23,7 @@ interface WebService {
 
 object RetrofitClient{
     val webService by lazy {
-        Retrofit.Builder()
-            .baseUrl(AppConstants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build().create(WebService::class.java)
-
+        ServiceGenerator.RetrofitEncrypt().create(WebService::class.java)
 
     }
 }

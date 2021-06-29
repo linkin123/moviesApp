@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class Movie(
     val id: Int = -1,
     val adult: Boolean = false,
-    val backdrop_path: String = "",
+    val backdrop_path: String? = "",
     val original_tittle: String = "",
     val original_languge: String = "",
     val overview: String = "",
@@ -86,7 +86,7 @@ fun MovieEntity.toMovie() : Movie = Movie(
 fun Movie.toMovieEntity(movieType : String ) : MovieEntity = MovieEntity(
     this.id,
     this.adult,
-    this.backdrop_path,
+    this.backdrop_path ?: "",
     this.original_tittle,
     this.original_languge,
     this.overview,

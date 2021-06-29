@@ -69,7 +69,7 @@ class MovieFragment : Fragment(R.layout.fragment_movie) , MovieAdapter.OnMovieCl
     override fun onMovieClick(movie: Movie) {
         val action = MovieFragmentDirections.actionMovieFragmentToMovieDetailFragment(
             movie.poster_path,
-            movie.backdrop_path,
+            movie.backdrop_path ?: "",
             movie.vote_avergage.toFloat(),
             movie.vote_count,
             movie.overview,
